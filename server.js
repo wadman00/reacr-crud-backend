@@ -3,9 +3,9 @@ const app = express();
 const cors = require('cors');
 const dotenv = require('dotenv');
 const mongodb = require('mongodb');
-const registre = require('./controllers/register');
 const bcrypt = require('bcrypt');
 const register = require('./controllers/register');
+const login = require('./controllers/login');
 
 dotenv.config();
 
@@ -27,9 +27,11 @@ const db = {
 
 app.get('/saludar',(req,res)=>{
     res.status(200).json({saludo:"Hola"});
-    
-    
     });
+
+app.post('/login',(req,res)=>{
+    login.handleLogin(req,res,db,bcrypt);
+    });  
 
 app.post('/registro',(req,res)=>{
 
