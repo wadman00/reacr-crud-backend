@@ -1,5 +1,7 @@
+const res = require("express/lib/response");
+
 const handleLogin = async (req, res, database, bcrypt) =>{
-        var isFound = false;
+   
         const { email, password } = req.body;
         const { MongoClient, url, dbName } = database;
         const client = await MongoClient.connect(url, { useNewUrlParser: true })
@@ -10,13 +12,14 @@ const handleLogin = async (req, res, database, bcrypt) =>{
             res.status(500).json("ERROR IN THE SERVER");
             
             return
-        }
+        } 
         const db = client.db(dbName);
         let collection = db.collection("users");
-        isFound = await checkUser(email,password,collection,bcrypt);
+        const result = await checkUser(email,password,collection,bcrypt);
 
-        if(isFound){
-            res.json({status:"ACCESS_GRANTED",user:email})
+        if(result){
+
+            res.json({status:"ACCESS_GRANTED",user:result})
         }else{
             res.json({status:"ACCESS_DENIED"});
         }
@@ -35,8 +38,9 @@ const handleLogin = async (req, res, database, bcrypt) =>{
         let query = { email:email};
         let result = await collection.findOne(query);
         let value = bcrypt.compareSync(password,result.password);
+        
         if (value) {
-            return true;
+            return {fullName:result.fullName,id:result._id};
         } else {
             return false;
         }
