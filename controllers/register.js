@@ -64,7 +64,8 @@ const handleRegister = async (req, res, database, bcrypt) => {
 
 }
 
-async function checkUser(user, collection) {
+async function checkUser(user, collection) 
+{
 
     try {
         let query = { email: user.email};
@@ -81,7 +82,8 @@ async function checkUser(user, collection) {
 
 }
 
-async function insertUser(user, collection) {
+async function insertUser(user, collection) 
+{
 
     const { email, password, fullName,role } = user;
 
