@@ -93,7 +93,46 @@ async function getProducts(req, res, database) {
 }
 
 
+async function deleteProduct(req, res, database) {
+
+    const _id = req.body._id;
+
+    const { MongoClient, url, dbName, ObjectId } = database;
+
+    const client = await MongoClient.connect(url, { useNewUrlParser: true })
+        .catch(err => { console.log(err); });
+
+    try {
+        if (!client) {
+            res.status(500).json("ERROR IN THE SERVER");
+            return
+        }
+
+        const db = client.db(dbName);
+        let collection = db.collection("products");
+
+
+        const result = await collection.deleteOne({ _id:new ObjectId(_id) });
+        console.log(result);
+        if(result.deletedCount===1){
+            res.status(200).json("Producto eliminado correctamente");
+        }else{
+            res.status(404).json("Producto no encontrado");
+        }
+
+        
+
+    }catch (error) {
+        console.log(error);
+        res.status(500).json("ERROR IN THE SERVER");
+    }finally{
+        client.close();
+    }
+}
+
+
 module.exports={
     addProduct:addProduct,
-    getProducts:getProducts
+    getProducts:getProducts,
+    deleteProduct:deleteProduct
 }

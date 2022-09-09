@@ -23,7 +23,8 @@ app.listen(process.env.PORT || 3001, () => {
 const db = {
     MongoClient: mongodb.MongoClient,
     url: process.env.MONGODB_URI,// URL at which MongoDB service is running
-    dbName: process.env.DB_NAME // A Client to MongoDB
+    dbName: process.env.DB_NAME, // A Client to MongoDB
+    ObjectId:mongodb.ObjectId
 };
 
 app.get('/saludar', (req, res) => {
@@ -51,4 +52,9 @@ app.post('/products', (req, res) => {
     
     products.addProduct(req, res,db);
 
+});
+
+app.delete('/products', (req, res) =>{
+
+    products.deleteProduct(req, res,db);
 });
